@@ -60,6 +60,26 @@ function get_all_article () {
   .then(res => res.json());
 }
 
+function get_article_by_id (article_id) {
+  return fetch(`${host}/article/${article_id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json());
+}
+
+function get_article_by_username (username) {
+  return fetch(`${host}/article/${username}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json());
+}
+
 // Test
 co(function * () {
 
@@ -78,12 +98,32 @@ co(function * () {
   if (res.status !== 200) {
     throw new Error(res.message);
   }
+  const article_id = res.data.article_id;
 
   // get article
   res = yield get_all_article();
   if (res.status !== 200) {
     throw new Error(res.message);
   }
+  console.log('ALL ARTICLES:');
   console.log(res.data.articles);
+  console.log('');
+
+
+  console.log(`USER'S ARTICLES:`);
+  res = yield get_article_by_username('leon_huang');
+  if (res.status !== 200) {
+    throw new Error(res.message);
+  }
+  console.log(res.data.article);
+
+
+  console.log('');
+  console.log(`ARTICLE ${article_id}:`);
+  res = yield get_article_by_id(article_id);
+  if (res.status !== 200) {
+    throw new Error(res.message);
+  }
+  console.log(res.data.article);
 })
 .catch(console.error);

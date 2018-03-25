@@ -154,8 +154,6 @@ router.post('/article', function (req, res) {
       article_id: article_id
     }
   });
-
-  console.log(database);
 });
 
 // get add article
@@ -169,6 +167,47 @@ router.get('/article', function (req, res) {
     data: {
       articles: article_list
     }
+  });
+});
+
+// get article
+router.get('/article/:username_or_articleid', function (req, res) {
+
+  const id = req.params.username_or_articleid;
+
+  // article is found
+  if (typeof database.article[id] !== 'undefined') {
+    res.status(200);
+    res.send({
+      status: 200,
+      message: 'get article success',
+      data: {
+        article: database.article[id]
+      }
+    });
+    return;
+  }
+
+  // username is found
+  const user = database.user_pw_tk[id];
+  if (typeof user !== 'undefined') {
+    const article = database.user_profile[user.token].article_id.map(o => database.article[o]);
+    res.status(200);
+    res.send({
+      status: 200,
+      message: `get user's articles success`,
+      data: {
+        article: article
+      }
+    });
+    return;
+  }
+
+  res.status(400);
+  res.send({
+    status: 400,
+    message: 'username or article_id is not found',
+    data: {}
   });
 });
 

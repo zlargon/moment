@@ -15,7 +15,7 @@ function register (username, password) {
       'Content-Type': 'application/json'
     }
   })
-  .then(res => res.json())
+  .then(res => res.json());
 }
 
 // Login
@@ -30,10 +30,10 @@ function login (username, password) {
       'Content-Type': 'application/json'
     }
   })
-  .then(res => res.json())
+  .then(res => res.json());
 }
 
-// Login
+// Post Article
 function post (username, token, article) {
   return fetch(`${host}/article`, {
     method: 'POST',
@@ -46,7 +46,18 @@ function post (username, token, article) {
       'Content-Type': 'application/json'
     }
   })
-  .then(res => res.json())
+  .then(res => res.json());
+}
+
+// Get all articles
+function get_all_article () {
+  return fetch(`${host}/article`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json());
 }
 
 // Test
@@ -68,7 +79,11 @@ co(function * () {
     throw new Error(res.message);
   }
 
-  return res;
+  // get article
+  res = yield get_all_article();
+  if (res.status !== 200) {
+    throw new Error(res.message);
+  }
+  console.log(res.data.articles);
 })
-.then(console.log)
 .catch(console.error);

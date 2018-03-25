@@ -158,6 +158,20 @@ router.post('/article', function (req, res) {
   console.log(database);
 });
 
+// get add article
+router.get('/article', function (req, res) {
+  const article_list = Object.values(database.article);
+
+  res.status(200);
+  res.send({
+    status: 200,
+    message: 'get articles success',
+    data: {
+      articles: article_list
+    }
+  });
+});
+
 router.get('/debug', function (req, res) {
   res.send(database);
 });

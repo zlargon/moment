@@ -6,20 +6,14 @@ function register (username, password) {
     method: 'POST',
     body: JSON.stringify({
       username: username,
-      password: sha1(password)
+      password_hash: sha1(password)
     }),
     headers: new Headers({
       'Content-Type': 'application/json'
     })
   })
   .then(res => res.json())
-  .then(res => {
-    if (res.status !== 200) {
-      throw new Error(res.message);
-    }
-    return res.data;
-  })
-  .then(console.log)
+  .then(console.dir)
   .catch(console.error);
 }
 
@@ -29,20 +23,14 @@ function login (username, password) {
     method: 'POST',
     body: JSON.stringify({
       username: username,
-      password: sha1(password)
+      password_hash: sha1(password)
     }),
     headers: new Headers({
       'Content-Type': 'application/json'
     })
   })
   .then(res => res.json())
-  .then(res => {
-    if (res.status !== 200) {
-      throw new Error(res.message);
-    }
-    return res.data;
-  })
-  .then(console.log)
+  .then(console.dir)
   .catch(console.error);
 }
 

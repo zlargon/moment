@@ -9,8 +9,8 @@ router.get('/', function(req, res, next) {
 });
 
 // Database
-const DB = {
-  userList: {}
+const database = {
+  user_pw_tk: {}  // { username: { password: 'xxx', token: 'xxx' } }
 };
 
 // register
@@ -18,10 +18,10 @@ router.post('/register', function (req, res) {
   // TODO: add data to database
 
   const username = req.body.username;
-  const password = sha1(req.body.password);
+  const password_hash = sha1(req.body.password_hash);
 
   // check username
-  if (typeof DB.userList[username] !== 'undefined') {
+  if (typeof database.user_pw_tk[username] !== 'undefined') {
     res.status(400);
     res.send({
       status: 400,
@@ -32,8 +32,8 @@ router.post('/register', function (req, res) {
   }
 
   // check username from database
-  DB.userList[username] = {
-    password: password,
+  database.user_pw_tk[username] = {
+    password_hash: password_hash,
     token: shortid.generate()
   };
   res.status(200);
@@ -50,10 +50,10 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res) {
 
   const username = req.body.username;
-  const password = sha1(req.body.password);
-  const user = DB.userList[username];
+  const password_hash = sha1(req.body.password_hash);
+  const user = database.user_pw_tk[username];
 
-  // check userList
+  // check user_pw_tk
   if (typeof user === 'undefined') {
     res.status(400);
     res.send({
@@ -67,7 +67,7 @@ router.post('/login', function (req, res) {
   }
 
   // check password
-  if (user.password !== password) {
+  if (user.password_hash !== password_hash) {
     res.status(400);
     res.send({
       status: 400,

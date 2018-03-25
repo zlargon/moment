@@ -10,7 +10,27 @@ router.get('/', function(req, res, next) {
 
 // Database
 const database = {
-  user_pw_tk: {}  // { username: { password: 'xxx', token: 'xxx' } }
+  user_pw_tk: {},   // {
+                    //   username: {
+                    //     password: 'xxx',
+                    //     token: 'xxx'
+                    //   }
+                    // }
+
+  user_profile: {}, // {
+                    //   user_token: {
+                    //     username: 'xxx',
+                    //     article_id: []
+                    //   }
+                    // }
+
+  article: {}       // {
+                    //   article_id: {
+                    //     timestamp: '',
+                    //     author: '',
+                    //     content: ''
+                    //   }
+                    // }
 };
 
 // register
@@ -32,10 +52,17 @@ router.post('/register', function (req, res) {
   }
 
   // check username from database
+  const token = shortid.generate();
   database.user_pw_tk[username] = {
     password_hash: password_hash,
-    token: shortid.generate()
+    token: token
   };
+
+  database.user_profile[token] = {
+    username: username,
+    article_id: []
+  };
+
   res.status(200);
   res.send({
     status: 200,
@@ -88,6 +115,51 @@ router.post('/login', function (req, res) {
       token: user.token
     }
   });
+});
+
+// post article
+router.post('/article', function (req, res) {
+  const username = req.body.username;
+  const user_token = req.body.token;
+  const article_content = req.body.article;
+
+  // verify the user and token
+  const user = database.user_profile[user_token];
+  if (typeof user === 'undefined' || user.username !== username) {
+    res.status(400);
+    res.send({
+      status: 400,
+      message: 'token is unauthorized',
+      data: {
+        username: username
+      }
+    });
+    return;
+  }
+
+  const article_id = shortid.generate();
+  database.article[article_id] = {
+    time: new Date(),
+    author: username,
+    content: article_content
+  };
+  database.user_profile[user_token].article_id.push(article_id);
+
+  res.status(200);
+  res.send({
+    status: 200,
+    message: 'post success',
+    data: {
+      username: username,
+      article_id: article_id
+    }
+  });
+
+  console.log(database);
+});
+
+router.get('/debug', function (req, res) {
+  res.send(database);
 });
 
 module.exports = router;

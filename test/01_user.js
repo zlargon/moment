@@ -34,6 +34,19 @@ describe('User', function() {
     ).to.eventually.equal(200);
   });
 
+  it('User Login (Success)', function () {
+    return expect(
+      sdk.user.login('test', 'password')
+        .then(user => user.username)
+    ).to.eventually.equal('test');
+  });
+
+  it('User Login (Failed)', function () {
+    return expect(
+      sdk.user.login('test', 'wrong_password')
+    ).to.eventually.be.rejectedWith(Error);
+  });
+
   it('User Delete', function () {
     return expect(
       sdk.user.delete('test', 'password')

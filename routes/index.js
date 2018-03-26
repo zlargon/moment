@@ -36,48 +36,43 @@ const database = {
                     // }
 };
 
-// login
-router.post('/login', function (req, res) {
+// user login
+router.patch('/auth', function (req, res) {
 
-  const username = req.body.username;
-  const password_hash = sha1(req.body.password_hash);
-  const user = database.user_pw_tk[username];
+  User.findOneAndUpdate({
+    username: req.body.username,
+    password: sha1(req.body.password)
+  }, { $set: { token: shortid.generate() } })
+    .exec()
+    .then(user => {
 
-  // check user_pw_tk
-  if (typeof user === 'undefined') {
-    res.status(400);
-    res.send({
-      status: 400,
-      message: 'username does not exist',
-      data: {
-        username: username
+      if (user) {
+        res.status(200).json({
+          status: 200,
+          message: 'login success',
+          data: {
+            username: user.username,
+            email: user.email,
+            token: user.token,
+            article: user.article
+          }
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          message: 'username or password is wrong',
+          data: {}
+        });
       }
-    });
-    return;
-  }
 
-  // check password
-  if (user.password_hash !== password_hash) {
-    res.status(400);
-    res.send({
-      status: 400,
-      message: 'password is incorrect',
-      data: {
-        username: username
-      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 500,
+        message: err.message,
+        data: {}
+      });
     });
-    return;
-  }
-
-  res.status(200);
-  res.send({
-    status: 200,
-    message: 'login success',
-    data: {
-      username: username,
-      token: user.token
-    }
-  });
 });
 
 // post article

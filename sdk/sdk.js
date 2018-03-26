@@ -27,14 +27,20 @@ const sdk = {
       });
     },
 
-    getById: function (username) {
-      return fetch(`${host}/user/${username}`, {
+    getById: function (username, token) {
+      return fetch(`${host}/user/${username}?token=${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       })
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
     },
 
     getAll: function () {

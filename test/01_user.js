@@ -65,9 +65,11 @@ describe('User', function() {
 
   it('User Get by Id', function () {
     return expect(
-      sdk.user.getById(USER.username)
-        .then(res => res.status)
-    ).to.eventually.equal(200);
+      sdk.user.getById(USER.username, USER.token)
+        .then(user => {
+          return (user.username === USER.username) && (user.email === USER.email)
+        })
+    ).to.eventually.equal(true);
   });
 
   it('User Delete', function () {
@@ -81,9 +83,8 @@ describe('User', function() {
 
   it('User Get by Id again (should not be found)', function () {
     return expect(
-      sdk.user.getById(USER.username)
-        .then(res => res.status)
-    ).to.eventually.equal(400);
+      sdk.user.getById(USER.username, USER.token)
+    ).to.eventually.be.rejected;
   });
 
   it('User Delete again (shoud not be found)', function () {

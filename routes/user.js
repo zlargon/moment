@@ -41,7 +41,8 @@ router.post('/', function (req, res) {
 // 2. get user by id
 router.get('/:username', function (req, res) {
   User.findOne({
-      username: req.params.username
+      username: req.params.username,
+      token: req.query.token
     })
     .exec()
     .then(user => {
@@ -50,7 +51,11 @@ router.get('/:username', function (req, res) {
         res.status(200).json({
           status: 200,
           message: 'get user profile success',
-          data: user
+          data: {
+            username: user.username,
+            email: user.email,
+            article: user.article
+          }
         });
       } else {
         res.status(400).json({

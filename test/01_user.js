@@ -6,57 +6,82 @@ const expect = chai.expect;
 // setup promise
 chai.use(require('chai-as-promised'));
 
+const USER = {
+  username: 'test',
+  password: 'password',
+  email: 'test@gmail.com',
+  token: ''
+};
+
+let UESR_NUMBER;
+
 describe('User', function() {
 
-  it('User Registration', function () {
-
-    const username = 'test';
-    const password = 'password';
-    const email = 'test@gmail.com';
-
-    return expect(
-      sdk.user.register(username, password, email)
-        .then(res => res.status)
-    ).to.eventually.equal(200);
-  });
-
-  it('User Get by Id', function () {
-    return expect(
-      sdk.user.getById('test')
-        .then(res => res.status)
-    ).to.eventually.equal(200);
-  });
-
-  it('User Get All', function () {
+  it('User Get All (before registration)', function () {
     return expect(
       sdk.user.getAll()
-        .then(res => res.status)
-    ).to.eventually.equal(200);
+        .then(users => {
+          UESR_NUMBER = users.length;
+
+          return Array.isArray(users);
+        })
+    ).to.eventually.equal(true);
   });
 
-  it('User Login (Success)', function () {
+  it('User Registration', function () {
     return expect(
-      sdk.user.login('test', 'password')
-        .then(user => user.username)
-    ).to.eventually.equal('test');
+      sdk.user.register(USER.username, USER.password, USER.email)
+        .then(user => {
+          USER.token = user.token;  // get token
+
+          return (user.username === USER.username) && (user.email === USER.email)
+        })
+    ).to.eventually.equal(true);
+  });
+
+  it('User Get All (after registration)', function () {
+    return expect(
+      sdk.user.getAll()
+        .then(users => {
+          return UESR_NUMBER = users.length;
+        })
+    ).to.eventually.equal(UESR_NUMBER + 1);
   });
 
   it('User Login (Failed)', function () {
     return expect(
-      sdk.user.login('test', 'wrong_password')
-    ).to.eventually.be.rejectedWith(Error);
+      sdk.user.login(USER.username, 'wrong_password')
+    ).to.eventually.be.rejected;
+  });
+
+  it('User Login (Success)', function () {
+    return expect(
+      sdk.user.login(USER.username, USER.password)
+        .then(user => {
+          return (user.username === USER.username) && (user.token === USER.token)
+        })
+    ).to.eventually.equal(true);
+  });
+
+  it('User Get by Id', function () {
+    return expect(
+      sdk.user.getById(USER.username)
+        .then(res => res.status)
+    ).to.eventually.equal(200);
   });
 
   it('User Delete', function () {
     return expect(
       sdk.user.delete('test', 'password')
-        .then(res => res.status)
-    ).to.eventually.equal(200);
+        .then(user => {
+          return user.username === USER.username
+        })
+    ).to.eventually.equal(true);
   });
 
   it('User Get by Id again (should not be found)', function () {
     return expect(
-      sdk.user.getById('test')
+      sdk.user.getById(USER.username)
         .then(res => res.status)
     ).to.eventually.equal(400);
   });
@@ -64,8 +89,7 @@ describe('User', function() {
   it('User Delete again (shoud not be found)', function () {
     return expect(
       sdk.user.delete('test', 'password')
-        .then(res => res.status)
-    ).to.eventually.equal(400);
+    ).to.eventually.be.rejected;
   });
 
 });

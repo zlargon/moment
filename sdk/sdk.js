@@ -18,7 +18,13 @@ const sdk = {
           'Content-Type': 'application/json'
         }
       })
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
     },
 
     getById: function (username) {
@@ -38,7 +44,13 @@ const sdk = {
           'Content-Type': 'application/json'
         }
       })
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
     },
 
     delete: function (username, password) {
@@ -52,7 +64,13 @@ const sdk = {
           'Content-Type': 'application/json'
         }
       })
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
     },
 
     login: function (username, password) {

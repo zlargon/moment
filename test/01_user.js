@@ -41,18 +41,18 @@ describe('User', function() {
     ).to.eventually.equal(200);
   });
 
-  it('User Get by Id again (should be not found)', function () {
+  it('User Get by Id again (should not be found)', function () {
     return expect(
       sdk.user.getById('test')
         .then(res => res.status)
     ).to.eventually.equal(400);
   });
 
-  it('User Delete again', function () {
+  it('User Delete again (shoud not be found)', function () {
     return expect(
       sdk.user.delete('test', 'password')
         .then(res => res.status)
-    ).to.eventually.equal(200);
+    ).to.eventually.equal(400);
   });
 
 });

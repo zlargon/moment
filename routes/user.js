@@ -88,21 +88,27 @@ router.get('/', function (req, res) {
 
 // 4. delete user
 router.delete('/', function (req, res) {
-  User.deleteOne({
+  User.findOneAndRemove({
       username: req.body.username,
       password: sha1(req.body.password)
     })
-    .then(doc => {
+    .then(user => {
 
-      // if doc.result.n === 1, user did exist
-      // if doc.result.n === 0, user did not exist
-
-      res.status(200).json({
-        status: 200,
-        message: 'delete user success',
-        data: {}
-      });
-
+      if (user) {
+        res.status(200).json({
+          status: 200,
+          message: 'delete user success',
+          data: {
+            username: user.username
+          }
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          message: 'user is not found and cannot be delete',
+          data: {}
+        });
+      }
     })
     .catch(err => {
       res.status(500).json({

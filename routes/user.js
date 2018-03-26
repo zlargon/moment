@@ -17,8 +17,7 @@ router.post('/', function (req, res) {
 
   user.save()
     .then(result => {
-      res.status(200);
-      res.send({
+      res.status(200).json({
         status: 200,
         message: 'register success',
         data: {
@@ -27,10 +26,9 @@ router.post('/', function (req, res) {
       });
     })
     .catch(err => {
-      res.status(400);
-      res.send({
+      res.status(400).json({
         status: 400,
-        message: 'user already exist',
+        message: err,
         data: {}
       });
     });
@@ -45,15 +43,13 @@ router.get('/:username', function (req, res) {
     .then(user => {
 
       if (user) {
-        res.status(200);
-        res.send({
+        res.status(200).json({
           status: 200,
           message: 'get user profile success',
           data: user
         });
       } else {
-        res.status(400);
-        res.send({
+        res.status(400).json({
           status: 400,
           message: 'user is not found',
           data: {}
@@ -62,8 +58,7 @@ router.get('/:username', function (req, res) {
 
     })
     .catch(err => {
-      res.status(500);
-      res.send({
+      res.status(500).json({
         status: 500,
         message: err.message,
         data: {}
@@ -76,16 +71,14 @@ router.get('/', function (req, res) {
   User.find()
     .exec()
     .then(result => {
-      res.status(200);
-      res.send({
+      res.status(200).json({
         status: 200,
         message: 'get all users success',
         data: result
       });
     })
     .catch(err => {
-      res.status(500);
-      res.send({
+      res.status(500).json({
         status: 500,
         message: err.message,
         data: {}
@@ -104,8 +97,7 @@ router.delete('/', function (req, res) {
       // if doc.result.n === 1, user did exist
       // if doc.result.n === 0, user did not exist
 
-      res.status(200);
-      res.send({
+      res.status(200).json({
         status: 200,
         message: 'delete user success',
         data: {}
@@ -113,8 +105,7 @@ router.delete('/', function (req, res) {
 
     })
     .catch(err => {
-      res.status(500);
-      res.send({
+      res.status(500).json({
         status: 500,
         message: err.message,
         data: {}

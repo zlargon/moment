@@ -39,6 +39,20 @@ const sdk = {
         }
       })
       .then(res => res.json());
+    },
+
+    delete: function (username, password) {
+      return fetch(`${host}/user`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          username: username,
+          password: sha1(password)
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json());
     }
   }
 }

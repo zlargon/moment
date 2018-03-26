@@ -113,6 +113,31 @@ router.get('/user', function (req, res) {
     });
 });
 
+// delete user
+router.delete('/user', function (req, res) {
+  User.remove({
+      username: req.body.username,
+      password: sha1(req.body.password)
+    })
+    .exec()
+    .then(result => {
+      res.status(200);
+      res.send({
+        status: 200,
+        message: 'delete user success',
+        data: {}
+      });
+    })
+    .catch(err => {
+      res.status(400);
+      res.send({
+        status: 400,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 // login
 router.post('/login', function (req, res) {
 

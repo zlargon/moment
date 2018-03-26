@@ -34,4 +34,11 @@ describe('User', function() {
     ).to.eventually.equal(200);
   });
 
+  it('User Delete', function () {
+    return expect(
+      sdk.user.delete('test', 'password')
+        .then(res => res.status)
+    ).to.eventually.equal(200);
+  });
+
 });

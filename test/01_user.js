@@ -20,6 +20,13 @@ describe('User', function() {
     ).to.eventually.equal(200);
   });
 
+  it('User Get by Id', function () {
+    return expect(
+      sdk.user.getById('test')
+        .then(res => res.status)
+    ).to.eventually.equal(200);
+  });
+
   it('User Get All', function () {
     return expect(
       sdk.user.getAll()

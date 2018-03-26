@@ -21,6 +21,16 @@ const sdk = {
       .then(res => res.json());
     },
 
+    getById: function (username) {
+      return fetch(`${host}/user/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json());
+    },
+
     getAll: function () {
       return fetch(`${host}/user`, {
         method: 'GET',

@@ -67,6 +67,30 @@ router.post('/user', function (req, res) {
     });
 });
 
+// get user by id
+router.get('/user/:username', function (req, res) {
+  User.find({
+      username: req.params.username
+    })
+    .exec()
+    .then(result => {
+      res.status(200);
+      res.send({
+        status: 200,
+        message: 'get user profile success',
+        data: result
+      });
+    })
+    .catch(err => {
+      res.status(400);
+      res.send({
+        status: 400,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 // get all user
 router.get('/user', function (req, res) {
   User.find()

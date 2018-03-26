@@ -94,6 +94,29 @@ const sdk = {
         return result.data;
       });
     }
+  },
+
+  article: {
+    post: function (username, token, article) {
+      return fetch(`${host}/article`, {
+        method: 'POST',
+        body: JSON.stringify({
+          username: username,
+          token: token,
+          article: article
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
+    }
   }
 }
 

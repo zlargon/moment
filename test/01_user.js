@@ -20,4 +20,11 @@ describe('User', function() {
     ).to.eventually.equal(200);
   });
 
+  it('User Get All', function () {
+    return expect(
+      sdk.user.getAll()
+        .then(res => res.status)
+    ).to.eventually.equal(200);
+  });
+
 });

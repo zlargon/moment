@@ -67,6 +67,28 @@ router.post('/user', function (req, res) {
     });
 });
 
+// get all user
+router.get('/user', function (req, res) {
+  User.find()
+    .exec()
+    .then(result => {
+      res.status(200);
+      res.send({
+        status: 200,
+        message: 'get all users success',
+        data: result
+      });
+    })
+    .catch(err => {
+      res.status(400);
+      res.send({
+        status: 400,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 // login
 router.post('/login', function (req, res) {
 

@@ -3,6 +3,9 @@ const router = express.Router();
 const sha1 = require('js-sha1');
 const shortid = require('shortid');
 
+const mongoose = require('mongoose');
+const User = require('../models/user');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.sendfile('./public/index.html');
@@ -33,44 +36,35 @@ const database = {
                     // }
 };
 
-// register
-router.post('/register', function (req, res) {
-  // TODO: add data to database
+// user register
+router.post('/user', function (req, res) {
 
-  const username = req.body.username;
-  const password_hash = sha1(req.body.password_hash);
-
-  // check username
-  if (typeof database.user_pw_tk[username] !== 'undefined') {
-    res.status(400);
-    res.send({
-      status: 400,
-      message: 'username already exist',
-      data: {}
-    });
-    return;
-  }
-
-  // check username from database
-  const token = shortid.generate();
-  database.user_pw_tk[username] = {
-    password_hash: password_hash,
-    token: token
-  };
-
-  database.user_profile[token] = {
-    username: username,
-    article_id: []
-  };
-
-  res.status(200);
-  res.send({
-    status: 200,
-    message: 'register success',
-    data: {
-      username: username
-    }
+  const user = new User({
+    _id: new mongoose.Types.ObjectId(),
+    username: req.body.username,
+    password: sha1(req.body.password),  // sha1
+    email: req.body.email
   });
+
+  user.save()
+    .then(result => {
+      res.status(200);
+      res.send({
+        status: 200,
+        message: 'register success',
+        data: {
+          username: user.username
+        }
+      });
+    })
+    .catch(e => {
+      res.status(400);
+      res.send({
+        status: 400,
+        message: e.message,
+        data: {}
+      });
+    });
 });
 
 // login
@@ -212,7 +206,12 @@ router.get('/article/:username_or_articleid', function (req, res) {
 });
 
 router.get('/debug', function (req, res) {
-  res.send(database);
+  User.find()
+    .exec()
+    .then(result => {
+      res.send(result);
+    })
+    .catch(console.error);
 });
 
 module.exports = router;

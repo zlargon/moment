@@ -57,11 +57,11 @@ router.post('/user', function (req, res) {
         }
       });
     })
-    .catch(e => {
+    .catch(err => {
       res.status(400);
       res.send({
         status: 400,
-        message: e.message,
+        message: err.message,
         data: {}
       });
     });

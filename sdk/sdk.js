@@ -56,12 +56,8 @@ const sdk = {
     },
 
     login: function (username, password) {
-      return fetch(`${host}/auth`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          username: username,
-          password: sha1(password)
-        }),
+      return fetch(`${host}/auth?username=${username}&password=${sha1(password)}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }

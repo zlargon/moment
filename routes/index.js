@@ -37,12 +37,12 @@ const database = {
 };
 
 // user login
-router.patch('/auth', function (req, res) {
+router.get('/auth', function (req, res) {
 
-  User.findOneAndUpdate({
-    username: req.body.username,
-    password: sha1(req.body.password)
-  }, { $set: { token: shortid.generate() } })
+  User.findOne({
+      username: req.query.username,
+      password: sha1(req.query.password)
+    })
     .exec()
     .then(user => {
 
@@ -57,6 +57,7 @@ router.patch('/auth', function (req, res) {
             article: user.article
           }
         });
+
       } else {
         res.status(400).json({
           status: 400,

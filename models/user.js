@@ -15,7 +15,10 @@ const userSchema = mongoose.Schema({
     trim: true
   },
   email: String,
-  token: String,
+  token: {
+    type: String,
+    required: true
+  },
   article: Array
 });
 

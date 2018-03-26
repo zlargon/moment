@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const sha1 = require('js-sha1');
+const shortid = require('shortid');
 
 // 1. user register
 router.post('/', function (req, res) {
@@ -12,7 +13,8 @@ router.post('/', function (req, res) {
     _id: new mongoose.Types.ObjectId(),
     username: req.body.username,
     password: sha1(req.body.password),  // sha1
-    email: req.body.email
+    email: req.body.email,
+    token: shortid.generate()
   });
 
   user.save()
@@ -21,7 +23,9 @@ router.post('/', function (req, res) {
         status: 200,
         message: 'register success',
         data: {
-          username: user.username
+          username: user.username,
+          email: user.email,
+          token: user.token
         }
       });
     })

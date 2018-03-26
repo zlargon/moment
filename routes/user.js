@@ -74,11 +74,11 @@ router.get('/:username', function (req, res) {
 router.get('/', function (req, res) {
   User.find()
     .exec()
-    .then(result => {
+    .then(users => {
       res.status(200).json({
         status: 200,
         message: 'get all users success',
-        data: result
+        data: users.map(o => o.username)
       });
     })
     .catch(err => {

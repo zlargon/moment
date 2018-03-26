@@ -4,6 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://leon_huang:y6ggXZyk4UP1q3Nt@cluster0-shard-00-00-pszol.mongodb.net:27017,cluster0-shard-00-01-pszol.mongodb.net:27017,cluster0-shard-00-02-pszol.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin', {
+  userMongoClient: true
+});
+
+// const db = mongoose.connection;
+// db.on('error', function (e) {
+//   console.error('Database connect failed:', e);
+// });
+// db.once('open', function() {
+//   // we're connected!
+//   console.log('Database connect success');
+// });
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 

@@ -12,24 +12,41 @@ const USER = {
   token: ''
 };
 
-const ARTICLE = 'Hello World!';
+const ARTICLE = {
+  body: 'Hello World!',
+  number: -1
+};
 
-describe('User', function() {
+describe('Article', function() {
 
   before(function (done) {
     sdk.user.login(USER.username, USER.password)
       .then(user => {
         USER.token = user.token;
-        done();
+
+        return sdk.article.getAll()
       })
+      .then(articles => {
+        ARTICLE.number = articles.length;
+        done();
+      });
   });
 
-  it('Post Article', function () {
+  it('Article Post', function () {
     return expect(
-      sdk.article.post(USER.username, USER.token, ARTICLE)
+      sdk.article.post(USER.username, USER.token, ARTICLE.body)
         .then(article => {
-          return (article.author === USER.username) && (article.body === ARTICLE)
+          return (article.author === USER.username) && (article.body === ARTICLE.body)
         })
     ).to.eventually.equal(true);
+  });
+
+  it('Article Get All', function () {
+    return expect(
+      sdk.article.getAll()
+        .then(articles => {
+          return articles.length;
+        })
+    ).to.eventually.equal(ARTICLE.number + 1);
   });
 });

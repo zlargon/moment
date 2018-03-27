@@ -56,4 +56,33 @@ router.post('/', function(req, res) {
     });
 });
 
+// 2. get all article
+router.get('/', function (req, res) {
+
+  Article.find()
+    .exec()
+    .then(articles => {
+      res.status(200).json({
+        status: 200,
+        message: 'get all articles success',
+        data: articles.map(o => {
+          return {
+            articleId: o._id,
+            author: o.author,
+            timestamp: o.timestamp,
+            body: o.body,
+            comment: o.comment
+          }
+        })
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 500,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 module.exports = router;

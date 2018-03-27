@@ -116,6 +116,22 @@ const sdk = {
         }
         return result.data;
       });
+    },
+
+    getAll: function() {
+      return fetch(`${host}/article`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
     }
   }
 }

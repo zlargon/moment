@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const sha1 = require('js-sha1');
-const host = 'http://localhost:3000';
+const host = 'http://localhost:3001';
 
 // Register
 const sdk = {

@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const sdk = require('../sdk/sdk.js');
+const sdk = require('../src/sdk');
 const chai = require('chai');
 const expect = chai.expect;
 

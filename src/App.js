@@ -43,6 +43,7 @@ class App extends React.Component {
     dialogOpen: false,
     dialogTitle: '',
     dialogMessage: '',
+    post: '',
 
     panel: PANEL.MOMENTS.num,
     panelTitle: PANEL.MOMENTS.title,
@@ -105,7 +106,7 @@ class App extends React.Component {
 
         console.log('updateArticles');
 
-        const listItems = articles.map(article => {
+        const listItems = articles.reverse().map(article => {
 
           let time = new Date() - new Date(article.timestamp);
           let unit = 'sec';
@@ -129,7 +130,7 @@ class App extends React.Component {
                 <Avatar>{article.author.slice(0, 2).toUpperCase()}</Avatar>
               </div>
               <div>
-                <div>@{ article.author } ({ time + unit})</div>
+                <div>@{ article.author } ({ time + unit + ' ago'})</div>
                 <div style={{ marginTop: '5px' }}>
                   { article.body }
                 </div>
@@ -192,6 +193,17 @@ class App extends React.Component {
       panelTitle: panelTitle
     });
   };
+
+  postArticle = () => {
+    console.log('postArticle');
+
+    SDK.article.post(this.state.username, this.token, this.state.post)
+      .then(result => {
+        this.setState({panel: PANEL.MOMENTS.num});
+        this.updateArticles();
+      })
+      .catch(console.error)
+  }
 
   fieldOnChange = field => event => {
      this.setState({
@@ -261,6 +273,20 @@ class App extends React.Component {
 
     if (this.state.panel === PANEL.MOMENTS.num) {
       body = <List> { this.state.articles } </List>
+    }
+
+    if (this.state.panel === PANEL.ME.num) {
+      body = (
+        <div>
+          <div contentEditable='true'
+            style={{height: '100px', border: '2px solid grey', margin: '20px', textAlign: 'left'}}
+            onInput={e => this.setState({ post: e.target.innerText })}>
+          </div>
+          <Button variant="raised" color="primary" onClick={this.postArticle}>
+            Submit
+          </Button>
+        </div>
+      );
     }
 
     return (

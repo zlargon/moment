@@ -24,18 +24,27 @@ router.post('/', function(req, res) {
 
       } else {
 
+        // 1. create article
+        const articleId = new mongoose.Types.ObjectId();
         const article = new Article({
-          _id: new mongoose.Types.ObjectId(),
+          _id: articleId,
           author: user.username,
           timestamp: new Date(),
           body: req.body.article
         });
 
-        return article.save();
+        // 2. add article id to user
+        user.article.push(articleId);
+
+        return Promise.all([
+          article.save(),
+          user.save()
+        ]);
       }
     })
-    .then(article => {
+    .then(result => {
 
+      const article = result[0];
       res.status(200).json({
         status: 200,
         message: 'post article success',
@@ -144,14 +153,27 @@ router.delete('/:articleId', function (req, res) {
         });
 
       } else {
-        // 2. find the article
-        return Article.findOneAndRemove({ author: user.username, _id: req.params.articleId })
+
+        // 2. remove article from user.article array
+        const articleId = req.params.articleId;
+        const index = user.article.indexOf(articleId);
+        if (index !== -1) {
+          user.article.splice(index, 1);
+        }
+
+        // 3. find the article
+        return Promise.all([
+          Article.findOneAndRemove({ author: user.username, _id: req.params.articleId }),
+          user.save()
+        ]);
       }
 
     })
-    .then(article => {
+    .then(result => {
 
+      const article = result[0];
       if (!article) {
+
         res.status(400).json({
           status: 400,
           message: 'article is not found',

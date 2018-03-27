@@ -61,4 +61,25 @@ describe('Article', function() {
         })
     ).to.eventually.equal(true);
   });
+
+  it('Article delete by Id', function () {
+    return expect(
+      sdk.article.deleteById(USER.username, USER.token, ARTICLE.id)
+        .then(article => {
+          return article.articleId === ARTICLE.id;
+        })
+    ).to.eventually.equal(true);
+  });
+
+  it('Article get by id again (should be failed)', function () {
+    return expect(
+      sdk.article.getById(ARTICLE.id)
+    ).to.eventually.be.rejected;
+  });
+
+  it('Article delete by id again (should be failed)', function () {
+    return expect(
+      sdk.article.deleteById(USER.username, USER.token, ARTICLE.id)
+    ).to.eventually.be.rejected;
+  });
 });

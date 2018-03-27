@@ -148,7 +148,27 @@ const sdk = {
         }
         return result.data;
       });
-    }
+    },
+
+    deleteById: function (username, token, articleId) {
+      return fetch(`${host}/article/${articleId}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          username: username,
+          token: token
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      });
+    },
   }
 }
 

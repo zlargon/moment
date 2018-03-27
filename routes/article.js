@@ -125,4 +125,57 @@ router.get('/:articleId', function (req, res) {
     });
 });
 
+// 4. delete article
+router.delete('/:articleId', function (req, res) {
+
+  // 1. check user auth
+  User.findOne({
+      username: req.body.username,
+      token: req.body.token
+    })
+    .exec()
+    .then(user => {
+
+      if (!user) {
+        res.status(400).json({
+          status: 400,
+          message: 'user is unauthorized',
+          data: {}
+        });
+
+      } else {
+        // 2. find the article
+        return Article.findOneAndRemove({ author: user.username, _id: req.params.articleId })
+      }
+
+    })
+    .then(article => {
+
+      if (!article) {
+        res.status(400).json({
+          status: 400,
+          message: 'article is not found',
+          data: {}
+        });
+
+      } else {
+
+        res.status(200).json({
+          status: 200,
+          message: 'article delete success',
+          data: {
+            articleId: article._id
+          }
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 500,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 module.exports = router;

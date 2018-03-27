@@ -8,7 +8,7 @@ const User = require('../models/UserModel');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.sendfile('./public/index.html');
+  res.sendfile('./build/index.html');
 });
 
 // 1. user login

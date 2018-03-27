@@ -1,12 +1,15 @@
 const fetch = require('node-fetch');
 const sha1 = require('js-sha1');
-const host = 'http://localhost:3001';
 
-// Register
 const sdk = {
+  host: '',
+  setHost: function (host) {
+    this.host = host;
+  },
+
   user: {
     register: function (username, password, email) {
-      return fetch(`${host}/user`, {
+      return fetch(`${sdk.host}/user`, {
         method: 'POST',
         body: JSON.stringify({
           username: username,
@@ -27,7 +30,7 @@ const sdk = {
     },
 
     getById: function (username, token) {
-      return fetch(`${host}/user/${username}?token=${token}`, {
+      return fetch(`${sdk.host}/user/${username}?token=${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -43,7 +46,7 @@ const sdk = {
     },
 
     getAll: function () {
-      return fetch(`${host}/user`, {
+      return fetch(`${sdk.host}/user`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -59,7 +62,7 @@ const sdk = {
     },
 
     delete: function (username, password) {
-      return fetch(`${host}/user`, {
+      return fetch(`${sdk.host}/user`, {
         method: 'DELETE',
         body: JSON.stringify({
           username: username,
@@ -79,7 +82,7 @@ const sdk = {
     },
 
     login: function (username, password) {
-      return fetch(`${host}/auth?username=${username}&password=${sha1(password)}`, {
+      return fetch(`${sdk.host}/auth?username=${username}&password=${sha1(password)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +100,7 @@ const sdk = {
 
   article: {
     post: function (username, token, article) {
-      return fetch(`${host}/article`, {
+      return fetch(`${sdk.host}/article`, {
         method: 'POST',
         body: JSON.stringify({
           username: username,
@@ -118,7 +121,7 @@ const sdk = {
     },
 
     getAll: function() {
-      return fetch(`${host}/article`, {
+      return fetch(`${sdk.host}/article`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -134,7 +137,7 @@ const sdk = {
     },
 
     getById: function(articleId) {
-      return fetch(`${host}/article/${articleId}`, {
+      return fetch(`${sdk.host}/article/${articleId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -150,7 +153,7 @@ const sdk = {
     },
 
     deleteById: function (username, token, articleId) {
-      return fetch(`${host}/article/${articleId}`, {
+      return fetch(`${sdk.host}/article/${articleId}`, {
         method: 'DELETE',
         body: JSON.stringify({
           username: username,

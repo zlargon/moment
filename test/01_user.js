@@ -17,15 +17,12 @@ let UESR_NUMBER;
 
 describe('User', function() {
 
-  it('User Get All (before registration)', function () {
-    return expect(
-      sdk.user.getAll()
-        .then(users => {
-          UESR_NUMBER = users.length;
-
-          return Array.isArray(users);
-        })
-    ).to.eventually.equal(true);
+  before(function (done) {
+    sdk.user.getAll()
+      .then(users => {
+        UESR_NUMBER = users.length;
+        done();
+      })
   });
 
   it('User Registration', function () {

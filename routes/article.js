@@ -85,4 +85,44 @@ router.get('/', function (req, res) {
     });
 });
 
+// 3. get article by id
+router.get('/:articleId', function (req, res) {
+  Article.findOne({
+      _id: req.params.articleId
+    })
+    .exec()
+    .then(article => {
+
+      // failed
+      if (!article) {
+        res.status(400).json({
+          status: 400,
+          message: 'article is not found',
+          data: {}
+        });
+        return;
+      }
+
+      // success
+      res.status(200).json({
+        status: 200,
+        message: 'get article profile success',
+        data: {
+          author: article.author,
+          timestamp: article.timestamp,
+          body: article.body,
+          comment: article.comment
+        }
+      });
+
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 500,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
 module.exports = router;

@@ -14,7 +14,8 @@ const USER = {
 
 const ARTICLE = {
   body: 'Hello World!',
-  number: -1
+  number: -1,
+  id: ''
 };
 
 describe('Article', function() {
@@ -36,6 +37,8 @@ describe('Article', function() {
     return expect(
       sdk.article.post(USER.username, USER.token, ARTICLE.body)
         .then(article => {
+          ARTICLE.id = article.articleId;
+
           return (article.author === USER.username) && (article.body === ARTICLE.body)
         })
     ).to.eventually.equal(true);
@@ -48,5 +51,14 @@ describe('Article', function() {
           return articles.length;
         })
     ).to.eventually.equal(ARTICLE.number + 1);
+  });
+
+  it('Article Get by Id', function () {
+    return expect(
+      sdk.article.getById(ARTICLE.id)
+        .then(article => {
+          return (article.author === USER.username) && (article.body === ARTICLE.body);
+        })
+    ).to.eventually.equal(true);
   });
 });

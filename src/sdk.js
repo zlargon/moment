@@ -23,6 +23,9 @@ const sdk = {
       .then(res => res.json())
       .then(result => {
         if (result.status !== 200) {
+
+          console.log(result.message);
+
           throw new Error(result.message);
         }
         return result.data;

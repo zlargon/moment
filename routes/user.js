@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
     .catch(err => {
       res.status(400).json({
         status: 400,
-        message: err,
+        message: err.message,
         data: {}
       });
     });

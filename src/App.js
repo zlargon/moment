@@ -11,8 +11,8 @@ import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavi
 import RestoreIcon from 'material-ui-icons/Restore';
 import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 import PersonAddIcon from 'material-ui-icons/PersonAdd';
-import FaceIcon from 'material-ui-icons/Face';
 import Button from 'material-ui/Button';
+import Avatar from 'material-ui/Avatar';
 import Dialog, {
   DialogContent,
   DialogContentText,
@@ -126,7 +126,7 @@ class App extends React.Component {
           return (
             <ListItem key={article.articleId} style={{ borderBottom: '1px solid blue', height: '60px' }}>
               <div style={{ height: '35px', width: '35px', marginRight: '12px' }}>
-                <FaceIcon style={{ fontSize: '35px' }} />
+                <Avatar>{article.author.slice(0, 2).toUpperCase()}</Avatar>
               </div>
               <div>
                 <div>@{ article.author } ({ time + unit})</div>
@@ -152,7 +152,7 @@ class App extends React.Component {
           return (
             <ListItem key={index} style={{ borderBottom: '1px solid blue', height: '60px' }}>
               <div style={{ height: '35px', width: '35px', marginRight: '12px' }}>
-                <FaceIcon style={{ fontSize: '35px' }} />
+                <Avatar>{user.slice(0, 2).toUpperCase()}</Avatar>
               </div>
               <div>
                 <div>{user}</div>

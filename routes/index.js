@@ -4,7 +4,7 @@ const sha1 = require('js-sha1');
 const shortid = require('shortid');
 
 const mongoose = require('mongoose');
-const User = require('../models/user');
+const User = require('../models/UserModel');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

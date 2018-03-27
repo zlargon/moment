@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const mongoose = require('mongoose');
-const User = require('../models/user');
-const Article = require('../models/article');
+const User = require('../models/UserModel');
+const Article = require('../models/ArticleModel');
 
 const sha1 = require('js-sha1');
 const shortid = require('shortid');

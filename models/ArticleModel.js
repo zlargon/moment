@@ -15,7 +15,8 @@ const articleSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  comment: Array
+  comment: Array,
+  like: Array
 });
 
 module.exports = mongoose.model('Article', articleSchema);

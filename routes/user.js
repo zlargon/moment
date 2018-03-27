@@ -3,6 +3,8 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Article = require('../models/article');
+
 const sha1 = require('js-sha1');
 const shortid = require('shortid');
 
@@ -118,6 +120,35 @@ router.delete('/', function (req, res) {
           data: {}
         });
       }
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 500,
+        message: err.message,
+        data: {}
+      });
+    });
+});
+
+// 5. get user's articles
+router.get('/:username/articles', function (req, res) {
+
+  Article.find({ author: req.params.username })
+    .exec()
+    .then(articles => {
+      res.status(200).json({
+        status: 200,
+        message: `get user's articles success`,
+        data: articles.map(o => {
+          return {
+            articleId: o._id,
+            author: o.author,
+            timestamp: o.timestamp,
+            body: o.body,
+            comment: o.comment
+          }
+        })
+      });
     })
     .catch(err => {
       res.status(500).json({

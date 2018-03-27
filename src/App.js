@@ -24,13 +24,15 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.updateArticles();
+    this.updateUsers();
   }
 
   state = {
     panel: PANEL.MOMENTS.num,
     panelTitle: PANEL.MOMENTS.title,
-    articles: []
-  };
+    articles: [],
+    users: []
+  }
 
   updateArticles = () => {
     SDK.article.getAll()
@@ -68,10 +70,33 @@ class App extends React.Component {
                 </div>
               </div>
             </ListItem>
-            );
+          );
         });
 
         this.setState({ articles: listItems });
+      })
+      .catch(console.error);
+  }
+
+  updateUsers = () => {
+    SDK.user.getAll()
+      .then(users => {
+        console.log('updateUsers');
+
+        const listItems = users.map((user, index) => {
+          return (
+            <ListItem key={index} style={{ borderBottom: '1px solid blue', height: '60px' }}>
+              <div style={{ height: '35px', width: '35px', marginRight: '12px' }}>
+                <FaceIcon style={{ fontSize: '35px' }} />
+              </div>
+              <div>
+                <div>{user}</div>
+              </div>
+            </ListItem>
+          );
+        });
+
+        this.setState({ users: listItems });
       })
       .catch(console.error);
   }
@@ -81,6 +106,7 @@ class App extends React.Component {
     let panelTitle;
     if (panelNumber === PANEL.FRIENDS.num) {
       panelTitle = PANEL.FRIENDS.title;
+      this.updateUsers();
     }
 
     if (panelNumber === PANEL.MOMENTS.num) {
@@ -101,7 +127,11 @@ class App extends React.Component {
   render() {
 
     let body;
-    if (this.state.panel === 1) {
+    if (this.state.panel === PANEL.FRIENDS.num) {
+      body = <List> { this.state.users } </List>
+    }
+
+    if (this.state.panel === PANEL.MOMENTS.num) {
       body = <List> { this.state.articles } </List>
     }
 
@@ -116,7 +146,7 @@ class App extends React.Component {
           </Toolbar>
         </AppBar>
 
-        <div style={{ border: '1px solid blue', marginTop: '-5px', marginBottom: '45px' }}>
+        <div style={{ marginTop: '-5px', marginBottom: '45px' }}>
           { body }
         </div>
 

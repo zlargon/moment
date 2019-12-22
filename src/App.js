@@ -203,6 +203,14 @@ class App extends React.Component {
         this.updateArticles();
       })
       .catch(console.error)
+      .then(() => {
+        // ignore server error 500
+        this.setState({
+          panel: PANEL.MOMENTS.num,
+          panelTitle: PANEL.MOMENTS.title
+        });
+        this.updateArticles();
+      });
   }
 
   fieldOnChange = field => event => {

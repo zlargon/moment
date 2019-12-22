@@ -36,6 +36,8 @@ router.post('/', function(req, res) {
         // 2. add article id to user
         user.article.push(articleId);
 
+        // TODO: MongoError: Unknown modifier: $pushAll
+        // https://stackoverflow.com/a/48621806/
         return Promise.all([
           article.save(),
           user.save()

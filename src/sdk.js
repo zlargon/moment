@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const sha1 = require('js-sha1');
 
 const sdk = {
-  host: '',
+  host: 'http://localhost:3000',
   setHost: function (host) {
     this.host = host;
   },

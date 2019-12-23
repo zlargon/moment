@@ -218,7 +218,7 @@ class App extends React.Component {
       return (
         <div style={{ textAlign: 'center' }}>
           <div>
-            <img src={logo} style={{ width: '75%', marginTop: '60px' }}/>
+            <img src={logo} alt='' style={{ width: '75%', marginTop: '60px' }}/>
 
             <form noValidate autoComplete="off">
               <TextField

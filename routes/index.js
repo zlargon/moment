@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sha1 = require('js-sha1');
-const shortid = require('shortid');
 
-const mongoose = require('mongoose');
 const User = require('../models/UserModel');
 
 /* GET home page. */

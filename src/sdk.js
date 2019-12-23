@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const sha1 = require('js-sha1');
 
 const sdk = {
-  host: '',
+  host: 'http://localhost:3000',
   setHost: function (host) {
     this.host = host;
   },
@@ -64,40 +64,34 @@ const sdk = {
       });
     },
 
-    delete: function (username, password) {
-      return fetch(`${sdk.host}/user`, {
+    delete: async (username, password) => {
+      const result = await fetch(`${sdk.host}/user`, {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: username,
           password: sha1(password)
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        })
       })
-      .then(res => res.json())
-      .then(result => {
-        if (result.status !== 200) {
-          throw new Error(result.message);
-        }
-        return result.data;
-      });
+      .then(res => res.json());
+
+      if (result.status !== 200) {
+        throw new Error(result.message);
+      }
+      return result.data;
     },
 
-    login: function (username, password) {
-      return fetch(`${sdk.host}/auth?username=${username}&password=${sha1(password)}`, {
+    login: async (username, password) => {
+      const result = await fetch(`${sdk.host}/auth?username=${username}&password=${sha1(password)}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       })
-      .then(res => res.json())
-      .then(result => {
-        if (result.status !== 200) {
-          throw new Error(result.message);
-        }
-        return result.data;
-      });
+      .then(res => res.json());
+
+      if (result.status !== 200) {
+        throw new Error(result.message);
+      }
+      return result.data;
     }
   },
 

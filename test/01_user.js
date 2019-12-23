@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const sdk = require('../src/sdk');
 const chai = require('chai');
 const expect = chai.expect;
@@ -6,88 +5,66 @@ const expect = chai.expect;
 // setup promise
 chai.use(require('chai-as-promised'));
 
-const USER = {
-  username: 'test',
-  password: 'password',
-  email: 'test@gmail.com',
-  token: ''
-};
+describe('User', () => {
+  let UESR_NUMBER;
+  const USER = {
+    username: 'test',
+    password: 'password',
+    email: 'test@gmail.com',
+    token: ''
+  };
 
-let UESR_NUMBER;
-
-describe('User', function() {
-
-  before(function (done) {
-    sdk.user.getAll()
-      .then(users => {
-        UESR_NUMBER = users.length;
-        done();
-      })
+  before(async () => {
+    const users = await sdk.user.getAll();
+    UESR_NUMBER = users.length;
   });
 
-  it('User Registration', function () {
-    return expect(
-      sdk.user.register(USER.username, USER.password, USER.email)
-        .then(user => {
-          USER.token = user.token;  // get token
+  it('User Registration', async () => {
+    const user = await sdk.user.register(USER.username, USER.password, USER.email);
+    USER.token = user.token;
 
-          return (user.username === USER.username) && (user.email === USER.email)
-        })
-    ).to.eventually.equal(true);
+    expect(user.username).to.equal(USER.username);
+    expect(user.email).to.equal(USER.email);
   });
 
-  it('User Get All (after registration)', function () {
-    return expect(
-      sdk.user.getAll()
-        .then(users => {
-          return UESR_NUMBER = users.length;
-        })
-    ).to.eventually.equal(UESR_NUMBER + 1);
+  it('User Get All (after registration)', async () => {
+    const users = await sdk.user.getAll();
+    expect(users.length).to.equal(UESR_NUMBER + 1);
   });
 
-  it('User Login (Failed)', function () {
-    return expect(
+  it('User Login (Failed)', async () => {
+    expect(
       sdk.user.login(USER.username, 'wrong_password')
-    ).to.eventually.be.rejected;
+    ).to.be.rejectedWith(Error);
   });
 
-  it('User Login (Success)', function () {
-    return expect(
-      sdk.user.login(USER.username, USER.password)
-        .then(user => {
-          return (user.username === USER.username) && (user.token === USER.token)
-        })
-    ).to.eventually.equal(true);
+  it('User Login (Success)', async () => {
+    const user = await sdk.user.login(USER.username, USER.password);
+    expect(user.username).to.equal(USER.username);
+    expect(user.email).to.equal(USER.email);
   });
 
-  it('User Get by Id', function () {
-    return expect(
+  it('User Get by Id', async () => {
+    const user = await sdk.user.getById(USER.username, USER.token);
+    expect(user.username).to.equal(USER.username);
+    expect(user.email).to.equal(USER.email);
+  });
+
+  it('User Delete', async () => {
+    const user = await sdk.user.delete(USER.username, USER.password);
+    expect(user.username).to.equal(USER.username);
+  });
+
+  it('User Get by Id again (should not be found)', async () => {
+    expect(
       sdk.user.getById(USER.username, USER.token)
-        .then(user => {
-          return (user.username === USER.username) && (user.email === USER.email)
-        })
-    ).to.eventually.equal(true);
+    ).to.be.rejectedWith(Error);
   });
 
-  it('User Delete', function () {
-    return expect(
+  it('User Delete again (shoud not be found)', async () => {
+    expect(
       sdk.user.delete('test', 'password')
-        .then(user => {
-          return user.username === USER.username
-        })
-    ).to.eventually.equal(true);
-  });
-
-  it('User Get by Id again (should not be found)', function () {
-    return expect(
-      sdk.user.getById(USER.username, USER.token)
-    ).to.eventually.be.rejected;
-  });
-
-  it('User Delete again (shoud not be found)', function () {
-    return expect(
-      sdk.user.delete('test', 'password')
-    ).to.eventually.be.rejected;
+    ).to.be.rejectedWith(Error);
   });
 
 });
